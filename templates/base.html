@@ -1,0 +1,70 @@
+﻿{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" >
+  <title>Litmus</title>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/bootstrap.min.css' %}" >  -->
+  
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <!-- Popper.js CDN ( Bootstrap.js 앞에 배치) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap.js CDN -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+ 
+  <!-- Fontawesome CDN -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  
+  <!-- Bootstrap Colorpicker -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/css/bootstrap-colorpicker.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.5.3/js/bootstrap-colorpicker.min.js"></script>
+
+  <!-- Plotly CDN -->
+  <!-- <script src="https://cdn.plot.ly/plotly-latest.min.js"></script> --> 
+
+  <!-- respond.js CDN -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+  
+  <!-- <script src="{% static 'scripts/modernizr-2.6.2.js' %}"></script> -->
+  <!-- <link rel="shortcut icon" href="url ('static', filename='favicon.ico') " /> -->
+
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:black; padding: 0px">
+    <div class="container body-content">
+      <a class="navbar-brand" href="{% url 'litmus:main' %}">
+      <img src="{% static 'icon/Color Studio-Litmus Project(navi)-20190801.jpg' %}" style="width: 300px; height: auto;" alt="ModenJay Color Studio"/></a>
+      <img src="{% static 'icon/Color Studio-Litmus Project(logo)-20190404.jpg' %}" style="width: 120px; height: auto;" alt="McScience"/>
+    </div>
+  </nav>
+   
+  <div class="container body-content">
+      {% block content %}{% endblock %}
+      <hr />
+      <footer>
+        <div class="jumbotron" style="background-color:rgb(226, 226, 226); padding:5px; padding-left:10px">
+          <b style="font-size:9pt">&copy; ModenJay<sup>&reg</sup> Color Studio - Litmus Project</b>
+        </div>
+      </footer>
+  </div>
+  
+  <!-- jQuery Local -->
+  <!-- <script src="{% static 'scripts/jquery-1.10.2.js' %}"></script> -->
+  
+  <!-- Bootstrap Local -->
+  <!-- <script src="{% static 'scripts/bootstrap.js' %}"></script>  -->
+  
+  <!-- script src="{% static 'scripts/respond.js' %}"></script> -->
+  {% block scripts %}{% endblock %}
+
+</body>
+</html>

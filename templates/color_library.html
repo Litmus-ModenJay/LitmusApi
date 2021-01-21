@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block head %}
+<style>
+    #map { height: 600px; width:900px}
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<br>
+<div class="container-fluid text-center">
+    <div class="row content">
+        <!-- Title -->
+        <div class="col-sm-8 text-left"> 
+            <h3>List of Colors</h3>
+            <p>Total {{total}} Colors in Current Library</p>
+        <!-- Sort -->
+        <!--
+            <div class="dropdown">
+                <button class="btn btn btn-outline-dark font-weight-bold dropdown-toggle" type="button" id="dropdownSort" 
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Sort by</button>
+                <div class="dropdown-menu" aria-labelledby="dropdownSort">
+                  <a class="dropdown-item" href="#sortByColorGroup">Color Group</a>
+                  <a class="dropdown-item" href="#sortByColorName">Color Name</a>
+                </div>
+            </div>
+        -->
+        </div>
+        <!-- Setting of Link Button -->
+        <div class="col-sm-2" style="text-align:right">
+            <p></p>     
+            <p></p>
+            <p></p>
+        </div>
+        <div class="col-sm-2" style="text-align:right">
+            <p><a class="btn btn-info btn-sm border-light" style="background-color:indigo; width:110pt"
+                href="{% url 'litmus:main' %}">Color Search</a></p>
+            <p></p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="container" id="sortByColorGroup">
+    <div class="card">
+        {% for key, value in colors.items %}
+            <div class="card-header" id="heading{{key}}" style="padding:0px; padding-left:15px">
+                <h5 class="mb-0 d-flex justify-content-between align-items-center">
+                    <span style="font-size:14pt; padding:0px">{{ key.capitalize }} &ensp;</span>
+                    {% if key == "Red" %}
+                    <button class="btn btn-dark btn-sm collapsed" style="width:100px;" data-toggle="collapse" data-target="#collapse{{key}}" aria-expanded="true" aria-controls="#collapse{{key}}">
+                    {% else %}
+                    <button class="btn btn-dark btn-sm collapsed" style="width:100px;" data-toggle="collapse" data-target="#collapse{{key}}" aria-expanded="false" aria-controls="#collapse{{key}}">
+                    {% endif %}
+                    <span class="badge badge-dark" style="font-size:12pt; width:50px; text-align:right">{{value.count}}</span>
+                    &ensp; &nabla;
+                    </button>   
+                </h5>  
+            </div>
+            {% if key == "Red" %}
+            <div id="collapse{{key}}" class="collapse show" aria-labelledby="heading{{key}}" >
+            {% else %}
+            <div id="collapse{{key}}" class="collapse show" aria-labelledby="heading{{key}}" >
+            {% endif %}
+            
+            <div class="card-body" style="padding:5px; padding-left:20px; "></div>
+            {% for litmus in value.litmus %}
+                <div style="display: inline-block; padding-left:5px; ">
+                    {% if litmus.depth == "Dark"  or litmus.depth == "Deep" %}
+                        <p><a class="btn btn-primary btn-block border-light"
+                            style="width: 80px; height: 40px; font-size:8pt; text-align:left; padding:5px; color:white; background-color:{{litmus.hexa}};"
+                            href="{% url 'litmus:colorInfo' pk=litmus.id %}">
+                            {{ litmus.name|slice:':12' }}
+                        </a></p>
+                    {% else %}
+                        <p><a class="btn btn-default btn-block border-light font-weight-bold"
+                            style="width: 80px; height: 40px; font-size:8pt; text-align:left; padding:5px; color:black; background-color:{{litmus.hexa}}"
+                            href="{% url 'litmus:colorInfo' pk=litmus.id %}">
+                            {{ litmus.name|slice:':12' }}
+                        </a></p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <br>
+            </div>
+        {% endfor %}
+    </div>
+    <br>
+    <h5>Geo Map</h5>
+    <hr>
+    <div id="map"></div>
+</div>  
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr7uqzPRQYrFASLrIVkMbK8yCk6vbavtQ&callback=initMap"
+></script>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(function () {
+        $('#color_picker').colorpicker({
+            format: 'hex',
+        });
+        $('#color_picker').colorpicker().on('changeColor', function(e) {
+            document.getElementById("search_input").value = e.color.toHex().toUpperCase();
+
+        });
+    });
+</script>
+<script>
+    var map;
+    function initMap() {
+        var map_center = {lat: 34, lng: 130}; 
+        var map = new google.maps.Map(document.getElementById('map'), {zoom: 1.6, center: map_center});
+        // var marker = new google.maps.Marker({position: map_center, map: map, title:"title"});
+        
+        var locations = [
+            {% for key, value in colors.items %}
+            {% for litmus in value.litmus %}
+            ["{{litmus.id}}", {{litmus.geo.0}}, {{litmus.geo.1}}, "{{litmus.name}}", "{{litmus.hexa}}", "{{item.case}}"],
+            {% endfor %}
+            {% endfor %}
+        
+        ]
+        for (var i = 0; i < locations.length; i++) {
+            var marker = new google.maps.Marker({ 
+                position: {lat: locations[i][1], lng: locations[i][2]}, 
+                map: map,
+                label: {
+                    color: 'black',
+                    fontWeight: 'bold',
+                    fontSize: '11px',
+                    text: locations[i][3]
+                },
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale : 6,
+                    strokeWeight : 2,
+                    fillColor: locations[i][4],
+                    fillOpacity: 1.0,
+                    strokeColor: 'gray',
+                    // anchor: new google.maps.Point(0, 0),
+                    labelOrigin: new google.maps.Point(0, 2)
+                },
+            }); 
+        }
+    }
+</script>
+
+{% endblock %}

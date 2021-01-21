@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+<div class="container-fluid text-center">
+    <div class="row content">
+        <!-- Title -->
+        <div class="col-sm-4 text-left"> 
+            <h4>Color Search</h4>
+            <p></p>
+            <br>
+        </div>
+        <!-- Setting of Search Button -->
+        <div class="col-sm-4" style="text-align:right">
+            <form class="form-inline" style="text-align:center" action="{% url 'litmus:colorSearch' %}" id="color_search" method="POST">
+                {% csrf_token %}
+                <div class="form-group" style="text-align:center">
+                    <input type="text"  name="search" id="search_input" class="form-control input-group colorpicker-component" style="text-align:left" placeholder="color name or code">
+                    <button type="submit" name="submit" class="btn btn-Warning"><i class="fas fa-search"></i></button>   
+                </div>
+            </form>        
+        </div>
+        <div class="col-sm-2" style="text-align:right">
+            <p></p>
+            <p></p>
+            <p></p>
+        </div>
+    </div>
+    
+</div>
+
+<div class="container">
+    {% if search.identical.count %}
+        <br>
+        <h5>Colors Identical to "{{word}}" <span class="badge badgesuccess" style="font-size:10pt; text-align:center">{{search.identical.count}}</span></h5>
+        <hr>
+        {% for item in search.identical.list %}
+        <div style="display: inline-block;">
+            <p><a class="btn btn-primary btn-block border-light"
+                style="width: 150px; height: 45px; font-size:8pt; font-weight:{{item.litmus.text.font}}; text-align:left; padding:5px; color:{{item.litmus.text.color}}; background-color:{{item.litmus.hexa}};"
+                href="{% url 'litmus:colorInfo' pk=item.id %}">
+                {{ item.litmus.name }}
+            </a></p>
+        </div>
+        {% endfor %}
+        <br><br>
+    {% endif %}
+    {% if search.neighbor.count %}
+        <br>
+        <h5>Colors Neighbor to "{{word}}" <span class="badge badge-success" style="width:40px; font-size:10pt; text-align:center">{{search.neighbor.count}}</span></h5>
+        <hr>
+        {% for item in search.neighbor.list %}
+        <div style="display: inline-block;">
+            <p><a class="btn btn-primary btn-block border-light"
+                style="width: 150px; height: 45px; font-size:8pt; font-weight:{{item.litmus.text.font}}; text-align:left; padding:5px; color:{{item.litmus.text.color}}; background-color:{{item.litmus.hexa}};"
+                href="{% url 'litmus:colorInfo' pk=item.id %}">
+                {{ item.litmus.name }}<br>d={{item.distance|floatformat:4}}
+            </a></p>
+        </div>
+        {% endfor %}
+        <br><br>
+    {% endif %}
+    {% if search.match.count %}
+        <br>
+        <h5>Colors including word "{{word}}" <span class="badge badge-success" style="width:40px; font-size:10pt; text-align:center">{{search.match.count}}</span></h5>
+        <hr>
+        {% for item in search.match.list %}
+        <div style="display: inline-block;">
+            <p><a class="btn btn-primary btn-block border-light"
+                style="width: 150px; height: 45px; font-size:8pt; font-weight:{{item.litmus.text.font}}; text-align:left; padding:5px; color:{{item.litmus.text.color}}; background-color:{{item.litmus.hexa}};"
+                href="{% url 'litmus:colorInfo' pk=item.id %}">
+                {{ item.litmus.name}}
+            </a></p>
+        </div>
+        {% endfor %}
+        <br><br>
+    {% endif %}
+   
+</div>  
+
+{% endblock %}
+
